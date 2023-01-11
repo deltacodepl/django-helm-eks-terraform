@@ -1,0 +1,6 @@
+.git
+.cache
+venv/
+env/
+*.sqlite3
+Dockerfile
