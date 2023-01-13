@@ -6,7 +6,8 @@ resource "random_string" "suffix" {
 locals {
 
   # cluster_name = "${basename(path.cwd)}-${random_string.suffix.result}"
-  cluster_name = "${var.app_name}-${random_string.suffix.result}"
+  cluster_name = "${var.app_name}"
+
   numList = [1, 2, 3, 4, 5]
   sumList = sum([for x in local.numList : x * 10 if x % 2 == 0])
 
