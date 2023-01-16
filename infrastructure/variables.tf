@@ -2,8 +2,8 @@
 ## VPC - Variables ##
 ########################################
 
-variable "linux_root_volume_type" {
+variable "vpc_cidr" {
   type        = string
-  description = "Volumen type of root volumen of Linux Server. Can be standard, gp3, gp2, io1, sc1 or st1"
-  default     = "gp2"
+  description = "CDIR of VPC"
+  default     = "10.0.0.0/16"
 }

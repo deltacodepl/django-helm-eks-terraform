@@ -8,10 +8,10 @@ module "vpc" {
   version = "3.18.1"
 
   name                 = "${var.app_name}-vpc"
-  cidr                 = "10.0.0.0/16"
+  cidr                 = var.vpc_cidr
   azs                  = local.azs
-  private_subnets      = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 10)]
-  public_subnets       = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
+  private_subnets      = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k + 10)]
+  public_subnets       = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k)]
   
   enable_nat_gateway   = true
   single_nat_gateway   = true

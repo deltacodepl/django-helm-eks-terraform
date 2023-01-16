@@ -50,7 +50,7 @@ provider "aws" {
       service     = "${lower(local.cluster_name)}"
       env         =  var.app_environment
       dataclass   = "internal"
-      createdBy   = "kolszewski"
+      createdBy   = "ekadmin"
       costcenter  = "governance"
     }
   }
