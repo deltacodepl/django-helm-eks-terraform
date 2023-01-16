@@ -1,6 +1,3 @@
-data "aws_availability_zones" "available" {
-  state = "available"
-}
 
 module "vpc" {
   # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest

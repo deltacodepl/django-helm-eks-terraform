@@ -3,6 +3,11 @@ resource "random_string" "suffix" {
   special = false
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+
 locals {
 
   # cluster_name = "${basename(path.cwd)}-${random_string.suffix.result}"
