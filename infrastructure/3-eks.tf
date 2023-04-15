@@ -1,7 +1,7 @@
 module "eks" {
   # https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest
   source          = "terraform-aws-modules/eks/aws"
-  version         = "19.5.1"
+  version         = "19.13.0"
   cluster_name    = local.cluster_name
   cluster_version = "1.24"
   
@@ -25,12 +25,12 @@ module "eks" {
         role = "general"
       }
 
-      instance_types = ["t3.small"]
+      instance_types = ["t3.micro"]
       capacity_type  = "ON_DEMAND"
     }
 
     spot = {
-      desired_size = 1
+      desired_size = 2
       min_size     = 1
       max_size     = 2
 
@@ -38,13 +38,14 @@ module "eks" {
         role = "spot"
       }
 
-      taints = [{
-        key    = "market"
-        value  = "spot"
-        effect = "NO_SCHEDULE"
-      }]
+      # taints = [{
+      #   key    = "market"
+      #   value  = "spot"
+      #   effect = "NO_SCHEDULE"
+      # }]
 
-      instance_types = ["t3.micro"]
+      taints = []
+      instance_types = ["t3.medium"]
       capacity_type  = "SPOT"
     }
   }
