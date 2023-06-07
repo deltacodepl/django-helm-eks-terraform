@@ -1,18 +1,30 @@
 module "eks" {
   # https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest
   source          = "terraform-aws-modules/eks/aws"
-  version         = "19.13.0"
+  version         = "19.15.2"
   cluster_name    = local.cluster_name
-  cluster_version = "1.24"
+  cluster_version = "1.25"
   
   subnet_ids      = module.vpc.private_subnets
   vpc_id          = module.vpc.vpc_id
 
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
+  enable_irsa = true
 
   eks_managed_node_group_defaults = {
-    disk_size = 30
+    disk_size        = 25          # default volume size
+    disk_type        = "gp3"        # gp3 ebs volume
+    # disk_throughput  = 150          # min throughput
+    # disk_iops        = 3000         # min iops for gp3
+    # capacity_type    = "SPOT"
+    eni_delete       = true         # delete eni on termination
+    # key_name         = local.key    # default ssh keypair for nodes
+    ebs_optimized    = true         # ebs optimized instance
+    # ami_type         = "AL2_x86_64" # default ami type for nodes
+    create_launch_template  = true
+    enable_monitoring       = true
+    update_default_version  = false
   }
 
   eks_managed_node_groups = {
@@ -60,33 +72,35 @@ module "eks" {
     },
   ]
 
-  # node_security_group_additional_rules = {
-  #   ingress_allow_access_from_control_plane = {
-  #     type                          = "ingress"
-  #     protocol                      = "tcp"
-  #     from_port                     = 9443
-  #     to_port                       = 9443
-  #     source_cluster_security_group = true
-  #     description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
+   # aws_auth_users =  local.auth_users
+  
+  # cluster_addons = {
+  #   coredns = {
+  #     preserve    = true
+  #     most_recent = true
+
+  #     timeouts = {
+  #       create = "25m"
+  #       delete = "10m"
+  #     }
+  #   }
+  #   kube-proxy = {
+  #     most_recent = true
+  #   }
+  #   vpc-cni = {
+  #     most_recent = true
   #   }
   # }
-
-
 }
 
-# data "aws_eks_cluster" "cluster" {
-#   name = module.eks.cluster_name
-#   depends_on = [
-#     module.eks.cluster
-#   ]
-# }
+resource "aws_eks_addon" "addons" {
+  cluster_name = module.eks.cluster_name
+  for_each = {for addon in var.eks_addons: addon.name => addon}
+  addon_name = each.value.name
+  addon_version = each.value.version
+  resolve_conflicts = "OVERWRITE"
+}
 
-# data "aws_eks_cluster_auth" "cluster" {
-#   name = module.eks.cluster_name
-#   depends_on = [
-#     module.eks.cluster
-#   ]
-# }
 
 provider "kubernetes" {
   # host                   = data.aws_eks_cluster.cluster.endpoint

@@ -21,7 +21,7 @@ module "allow_eks_access_iam_policy" {
 
 module "eks_admins_iam_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-  version = "5.10"
+  version = "~> 5.10"
 
   role_name         = "eks-admin"
   create_role       = true
@@ -31,12 +31,13 @@ module "eks_admins_iam_role" {
 
   trusted_role_arns = [
     "arn:aws:iam::${module.vpc.vpc_owner_id}:root"
+    # "${module.ekadmin_iam_user.iam_user_arn}"
   ]
 }
 
 module "allow_assume_eks_admins_iam_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = "5.10"
+  version = "~> 5.10"
 
   name          = "allow-assume-eks-admin-iam-role"
   create_policy = true
@@ -57,7 +58,7 @@ module "allow_assume_eks_admins_iam_policy" {
 
 module "ekadmin_iam_user" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-user"
-  version = "5.10"
+  version = "~> 5.10"
 
   name                          = "ekadmin"
   create_iam_access_key         = false
@@ -69,7 +70,7 @@ module "ekadmin_iam_user" {
 
 module "eks_admins_iam_group" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-group-with-policies"
-  version = "5.10"
+  version = "~> 5.10"
 
   name                              = "eks-admin"
   attach_iam_self_management_policy = false

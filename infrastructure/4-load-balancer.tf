@@ -20,7 +20,7 @@ resource "helm_release" "aws_load_balancer_controller" {
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   namespace  = "kube-system"
-  version    = "1.4.7"
+  version    = "1.5.0"
 
   set {
     name  = "replicaCount"

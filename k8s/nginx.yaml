@@ -48,7 +48,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: www.segregatory24.eu
+    - host: django.unifoil.eu
       http:
         paths:
           - path: /
